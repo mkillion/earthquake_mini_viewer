@@ -11,7 +11,7 @@ require(["esri/map", "esri/dijit/Scalebar", "dojo/domReady!"], function(Map,Scal
         scalebarUnit: "dual"
     });
 
-    earthquakeLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://services.kgs.ku.edu/arcgis/rest/services/CO2/seismic/MapServer");
+    earthquakeLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://services.kgs.ku.edu/arcgis/rest/services/CO2/seismic_1/MapServer");
     earthquakeLayer.setVisibleLayers([8]);
     map.addLayers([earthquakeLayer]);
 });
@@ -39,7 +39,7 @@ function filterQuakes(year, mag) {
 
 function filterQuakesRecent() {
     var def = [];
-    def[8] = "state = 'KS' and lower(net) <> 'ismpkansas' and the_date = (select max(the_date) from earthquakes where state = 'KS' and lower(net) <> 'ismpkansas'";
+    def[8] = "state = 'KS' and lower(net) <> 'ismpkansas' and the_date = (select max(the_date) from earthquakes where state = 'KS' and lower(net) <> 'ismpkansas')";
     earthquakeLayer.setLayerDefinitions(def);
 }
 
