@@ -11,7 +11,7 @@ require(["esri/map", "esri/dijit/Scalebar", "dojo/domReady!"], function(Map,Scal
         scalebarUnit: "dual"
     });
 
-    earthquakesLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://services.kgs.ku.edu/arcgis/rest/services/CO2/seismic_1/MapServer");
+    earthquakesLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://services.kgs.ku.edu/arcgis1/rest/services/co2/seismic_1/MapServer");
     earthquakesLayer.setVisibleLayers([8]);
     map.addLayers([earthquakesLayer]);
 });
@@ -33,7 +33,6 @@ function filterQuakes(year, mag) {
             def[8] = "";
         }
     }
-
     earthquakesLayer.setLayerDefinitions(def);
 }
 
