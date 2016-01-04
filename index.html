@@ -8,28 +8,28 @@
     <link rel="stylesheet" href="http://js.arcgis.com/3.11/dijit/themes/claro/claro.css">
     <script src="http://js.arcgis.com/3.11compact/"></script>
     <script src="main.js"></script>
-    
+
     <style>
         html, body {
             height: 100%;
             margin: 0;
-            padding: 0 
+            padding: 0
         }
-        
+
         .ctrl {
             margin: 5px
         }
-        
+
         .esriScalebar {
             left: 23px;
             position: absolute;
             top: 460px
         }
-        
+
         #filter {
             margin-left: 65px
         }
-        
+
         #map-div {
             border: solid;
             height: 500px;
@@ -46,6 +46,7 @@
             Year:
             <select name="year" id="year" class="ctrl">
                 <option value="all" selected>All</option>
+                <option value="2016">2016</option>
                 <option value="2015">2015</option>
                 <option value="2014">2014</option>
                 <option value="2013">2013</option>
@@ -59,7 +60,7 @@
             </select>
             <input type="button" onclick="filterQuakes(dojo.byId('year').value,dojo.byId('mag').value);" value="Go" />
             <br />
-            <span class="ctrl">OR</span>  
+            <span class="ctrl">OR</span>
             Show all earthquakes
             <select name="days" id="days" class="ctrl">
                 <option value="7" selected>in the last week</option>
@@ -69,7 +70,7 @@
             </select>
             <input type="button" class="ctrl" onclick="filterQuakesDays(dojo.byId('days').value)" value="Go"/>
             <br />
-            <span class="ctrl">OR</span>  
+            <span class="ctrl">OR</span>
             <input type="button" class="ctrl" onclick="filterQuakesRecent();" value="Show Last Event in Kansas" />
             <br />
             <input type="button" class="ctrl" onclick="clearQuakeFilter()" value="Reset" />
