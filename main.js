@@ -1,3 +1,4 @@
+
 require(["esri/map", "esri/dijit/Scalebar", "dojo/domReady!"], function(Map,Scalebar) {
     var map = new Map("map-div", {
         center: [-98.5, 38.25],
