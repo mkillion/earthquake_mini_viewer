@@ -52,7 +52,7 @@ function(
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
     		size: 10,
-    		color: [0, 77, 168, 0.70]
+    		color: [255, 255, 230, 0.85]
 		} )
 	} );
 	quakesRenderer.addClassBreakInfo( {
@@ -61,8 +61,8 @@ function(
 		label: "1 to 1.9",
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
-    		size: 10,
-    		color: [0, 77, 168, 0.70]
+    		size: 11,
+    		color: [255, 246, 191, 0.85]
 		} )
 	} );
 	quakesRenderer.addClassBreakInfo( {
@@ -72,7 +72,7 @@ function(
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
     		size: 13,
-    		color: [0, 77, 168, 0.70]
+    		color: [253, 226, 150, 0.85]
 		} )
 	} );
 	quakesRenderer.addClassBreakInfo( {
@@ -82,17 +82,27 @@ function(
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
     		size: 20,
-    		color: [0, 77, 168, 0.70]
+    		color: [253, 195, 90, 0.85]
 		} )
 	} );
 	quakesRenderer.addClassBreakInfo( {
   		minValue: 4,
-  		maxValue: 10,
-		label: "4.0 and greater",
+  		maxValue: 4.99,
+		label: "4.0 to 4.9",
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
     		size: 26,
-    		color: [0, 77, 168, 0.70]
+    		color: [252, 152, 57, 0.85]
+		} )
+	} );
+    quakesRenderer.addClassBreakInfo( {
+  		minValue: 5,
+  		maxValue: 10,
+		label: "5.0 and greater",
+  		symbol: new SimpleMarkerSymbol( {
+    		style: "circle",
+    		size: 26,
+    		color: [234, 112, 39, 0.85]
 		} )
 	} );
 	var quakesLayer = new MapImageLayer( {
@@ -229,50 +239,52 @@ function(
 
     function quakeContent(feature) {
         var f = feature.attributes;
-        var ag = f.AGENCY !== "Null" ? f.AGENCY : "";
-        var ote = f.ORIGIN_TIME_ERR !== "Null" ? f.ORIGIN_TIME_ERR + " seconds" : "";
+        // var ag = f.AGENCY !== "Null" ? f.AGENCY : "";
+        // var ote = f.ORIGIN_TIME_ERR !== "Null" ? f.ORIGIN_TIME_ERR + " seconds" : "";
         var lat = f.LATITUDE !== "Null" ? f.LATITUDE : "";
-        var latErr = f.LATITUDE_ERR !== "Null" ? f.LATITUDE_ERR : "";
+        // var latErr = f.LATITUDE_ERR !== "Null" ? f.LATITUDE_ERR : "";
         var lon = f.LONGITUDE !== "Null" ? f.LONGITUDE : "";
-        var lonErr = f.LONGITUDE_ERR !== "Null" ? f.LONGITUDE_ERR : "";
-        var dep = f.DEPTH !== "Null" ? f.DEPTH : "";
-        var de = f.DEPTH_ERR !== "Null" ? f.DEPTH_ERR : "";
+        // var lonErr = f.LONGITUDE_ERR !== "Null" ? f.LONGITUDE_ERR : "";
+        // var dep = f.DEPTH !== "Null" ? f.DEPTH : "";
+        // var de = f.DEPTH_ERR !== "Null" ? f.DEPTH_ERR : "";
         var m = f.MAGNITUDE !== "Null" ? f.MAGNITUDE : "";
         var mt = f.MAGNITUDE_TYPE !== "Null" ? f.MAGNITUDE_TYPE : "";
-        var sas = f.SAS !== "Null" ? f.SAS : "";
+        // var sas = f.SAS !== "Null" ? f.SAS : "";
         var co = f.COUNTY_NAME !== "Null" ? f.COUNTY_NAME : "";
 
-        if (f.LAYER === 'USGS') {
-            var m = f.ML !== "Null" ? parseFloat(f.ML).toFixed(1) + " ml" : "";
-        }
+        // if (f.LAYER === 'USGS') {
+        //     var m = f.ML !== "Null" ? parseFloat(f.ML).toFixed(1) + " ml" : "";
+        // }
 
-        if (dep) { dep = parseFloat(dep).toFixed(1) + " km"; }
-        if (de) {
-            if (de === "0") {
-                de = "0 (fixed)";
-            } else {
-                de = parseFloat(de).toFixed(1) + " km";
-            }
-        }
-        var hu = "";
-        if (latErr && lonErr) {
-            var horizontalUncertainty = Math.sqrt( Math.pow(latErr,2) + Math.pow(lonErr,2) );
-            hu = horizontalUncertainty.toFixed(1) + " km";
-        }
+        // if (dep) { dep = parseFloat(dep).toFixed(1) + " km"; }
+        // if (de) {
+        //     if (de === "0") {
+        //         de = "0 (fixed)";
+        //     } else {
+        //         de = parseFloat(de).toFixed(1) + " km";
+        //     }
+        // }
+        // var hu = "";
+        // if (latErr && lonErr) {
+        //     var horizontalUncertainty = Math.sqrt( Math.pow(latErr,2) + Math.pow(lonErr,2) );
+        //     hu = horizontalUncertainty.toFixed(1) + " km";
+        // }
 
         var content = "<table id='popup-tbl'>";
         content += "<tr><td>Magnitude (" + mt + "): </td><td>" + m + "</td></tr>";
-        content += "<tr><td>Origin Time (local): </td><td>{LOCAL_TIME}</td></tr>";
-        content += "<tr><td>Origin Time Error: </td><td>" + ote + "</td></tr>";
-        content += "<tr><td>Seismic Action Score: </td><td>" + sas + "</td></tr>";
+        content += "<tr><td>Local Origin Time: </td><td>{LOCAL_TIME}</td></tr>";
+        content += "<tr><td>UTC Origin Time: </td><td>{ORIGIN_TIME}</td><tr>";
+        // content += "<tr><td>Origin Time Error: </td><td>" + ote + "</td></tr>";
+        // content += "<tr><td>Seismic Action Score: </td><td>" + sas + "</td></tr>";
         content += "<tr><td>County: </td><td>" + co + "</td></tr>";
-        content += "<tr><td>Quake ID: </td><td>{QUAKE_ID}</td></tr>";
-        content += "<tr><td>Reporting Agency: </td><td>" + ag + "</td></tr>";
+        // content += "<tr><td>Reporting Agency: </td><td>" + ag + "</td></tr>";
         content += "<tr><td>Latitude: </td><td>" + lat + "&deg;</td></tr>";
         content += "<tr><td>Longitude: </td><td>" + lon + "&deg;</td></tr>";
-        content += "<tr><td>Horizontal Uncertainty: </td><td>" + hu + "</td></tr>";
-        content += "<tr><td>Depth: </td><td>" + dep + "</td></tr>";
-        content += "<tr><td>Vertical Uncertainty: </td><td>" + de + "</td></tr></table>";
+        content += "<tr><td>Quake ID: </td><td>{QUAKE_ID}</td></tr>";
+        // content += "<tr><td>Horizontal Uncertainty: </td><td>" + hu + "</td></tr>";
+        // content += "<tr><td>Depth: </td><td>" + dep + "</td></tr>";
+        // content += "<tr><td>Vertical Uncertainty: </td><td>" + de + "</td></tr>";
+        content += "</table>";
 
         return content;
     }
