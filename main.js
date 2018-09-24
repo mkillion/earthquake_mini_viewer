@@ -34,6 +34,7 @@ function(
     arrayUtils,
     dom
 ) {
+    var isMobile = WURFL.is_mobile;
     var idDef = [];
     var hilite;
 
@@ -46,7 +47,7 @@ function(
 	} );
 	quakesRenderer.addClassBreakInfo( {
   		minValue: 0,
-  		maxValue: 1,
+  		maxValue: 0.99,
 		label: "Less than 1.0",
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
@@ -56,7 +57,7 @@ function(
 	} );
 	quakesRenderer.addClassBreakInfo( {
   		minValue: 1,
-  		maxValue: 2,
+  		maxValue: 1.99,
 		label: "1 to 1.9",
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
@@ -66,7 +67,7 @@ function(
 	} );
 	quakesRenderer.addClassBreakInfo( {
   		minValue: 2,
-  		maxValue: 3,
+  		maxValue: 2.99,
 		label: "2 to 2.9",
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
@@ -76,7 +77,7 @@ function(
 	} );
 	quakesRenderer.addClassBreakInfo( {
   		minValue: 3,
-  		maxValue: 4,
+  		maxValue: 3.99,
 		label: "3 to 3.9",
   		symbol: new SimpleMarkerSymbol( {
     		style: "circle",
@@ -141,9 +142,9 @@ function(
     function executeIdTask(event) {
         var identifyTask = new IdentifyTask(quakesURL);
         var identifyParams = new IdentifyParameters();
-        
+
         identifyParams.returnGeometry = true;
-        identifyParams.tolerance = 4;
+        identifyParams.tolerance = (isMobile) ? 9 : 4;
         identifyParams.layerIds = [0];
         identifyParams.layerOption = "visible";
         identifyParams.width = view.width;
