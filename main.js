@@ -38,6 +38,11 @@ function(
     var idDef = [];
     var hilite;
 
+    if (!isMobile) {
+        $("#from-date").datepicker();
+        $("#to-date").datepicker();
+    }
+
     var basemapLayer = new TileLayer( {url:"//services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer", id:"Base Map"} );
     var quakesURL = "http://services.kgs.ku.edu/arcgis8/rest/services/tremor/quakes_public/MapServer";
     var graphicsLayer = new GraphicsLayer();
@@ -150,6 +155,8 @@ function(
   	} );
 
     function executeIdTask(event) {
+        graphicsLayer.remove(hilite);
+
         var identifyTask = new IdentifyTask(quakesURL);
         var identifyParams = new IdentifyParameters();
 
@@ -199,7 +206,6 @@ function(
 
 
     function highlightFeature(features) {
-        graphicsLayer.remove(hilite);
         var f = features[0] ? features[0] : features;
 
         switch (f.geometry.type) {
