@@ -145,17 +145,17 @@ function(
         // Remove zoom-to action that gets added by default:
 		view.popup.actions.splice(0, 1);
 
-        // Default initial load to display quakes in the last 30 days:
+        // Default initial load to display quakes in the last 7 days:
         var today = new Date();
-        var thirthyDaysAgo = new Date();
-        var startDate = new Date( thirthyDaysAgo.setDate(today.getDate() - 30) );
+        var daysAgo = new Date();
+        var startDate = new Date( daysAgo.setDate(today.getDate() - 7) );
         var year = startDate.getFullYear();
         var month = addZero( startDate.getMonth() + 1 );
         var day = addZero( startDate.getDate() );
         var dateTxt = month + "/" + day + "/" + year;
-        //set controls
 
-        // filterQuakes();
+        $("#from-date").val(dateTxt);
+        filterQuakes();
     } );
 
     var scaleBar = new ScaleBar( {
