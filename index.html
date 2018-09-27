@@ -20,7 +20,8 @@
             padding: 0;
         }
 
-        .ctrl {
+        .ctrl,
+        #legend-content {
             font: normal normal normal 16px arial;
             margin-top: 8px;
             text-align: left;
@@ -45,6 +46,15 @@
 
         .txtinput {
             font: normal normal normal 16px arial;
+        }
+
+        #filter {
+            float: left;
+        }
+
+        #legend-content,
+        #logo {
+            float: right;
         }
     </style>
 </head>
@@ -72,7 +82,14 @@
             <input class="txtinput" type="button" onclick="filterQuakes();" value="Apply Filter" />&nbsp;&nbsp;&nbsp;
             <input class="txtinput" type="button" onclick="clearQuakeFilter();" value="Clear Filter" />
         </div>
+    </div>
 
+    <!-- <div id="logo"><img src="kgs_logo.png"></div> -->
+
+    <div id="legend-content">
+        KGS Events<br>
+        Magnitude<br>
+        <img src="legend.png">
     </div>
 </body>
 </html>

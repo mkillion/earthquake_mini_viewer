@@ -13,6 +13,7 @@ require([
     "esri/widgets/Popup",
     "esri/layers/GraphicsLayer",
     "esri/Graphic",
+    // "esri/widgets/Legend",
     "dojo/_base/array",
     "dojo/dom",
     "dojo/domReady!"
@@ -31,6 +32,7 @@ function(
     Popup,
     GraphicsLayer,
     Graphic,
+    // Legend,
     arrayUtils,
     dom
 ) {
@@ -110,6 +112,10 @@ function(
     		color: [234, 112, 39, 0.85]
 		} )
 	} );
+    // quakesRenderer.legendOptions = {
+  	// 	title: "Magnitude"
+	// };
+
 	var quakesLayer = new MapImageLayer( {
 		url: quakesURL,
 		sublayers:[ {
@@ -165,6 +171,16 @@ function(
   	view.ui.add(scaleBar, {
     	position: "bottom-left"
   	} );
+
+    // var legend = new Legend( {
+	//  	view: view,
+	//   	layerInfos: [
+    // 		{
+    // 			layer: quakesLayer,
+    // 			title: "KGS Events"
+    // 		}
+	// 	]
+	// }, "legend-content" );
 
 
     function addZero(x) {
