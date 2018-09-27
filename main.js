@@ -144,6 +144,18 @@ function(
 
         // Remove zoom-to action that gets added by default:
 		view.popup.actions.splice(0, 1);
+
+        // Default initial load to display quakes in the last 30 days:
+        var today = new Date();
+        var thirthyDaysAgo = new Date();
+        var startDate = new Date( thirthyDaysAgo.setDate(today.getDate() - 30) );
+        var year = startDate.getFullYear();
+        var month = addZero( startDate.getMonth() + 1 );
+        var day = addZero( startDate.getDate() );
+        var dateTxt = month + "/" + day + "/" + year;
+        //set controls
+
+        // filterQuakes();
     } );
 
     var scaleBar = new ScaleBar( {
@@ -153,6 +165,12 @@ function(
   	view.ui.add(scaleBar, {
     	position: "bottom-left"
   	} );
+
+
+    function addZero(x) {
+        return (x < 10 ? '0' : '') + x;
+    }
+
 
     function executeIdTask(event) {
         graphicsLayer.remove(hilite);
@@ -296,52 +314,120 @@ function(
     }
 
 
-    function filterQuakes(year, mag) {
-        var nextYear = parseInt(year) + 1;
-        var def = [];
+    filterQuakes = function() {
+        graphicsLayer.removeAll();
+        var fromDate = dom.byId("from-date").value;
+        var toDate = dom.byId("to-date").value;
+        var fromDateIsValid = true;
+        var toDateIsValid = true;
+        var mag = dom.byId("mag").value;
+        var timeWhere = "";
+		var magWhere = "";
+        var theWhere = "";
 
-        if (year !== "all") {
-            if (mag !== "all") {
-                def[8] = "the_date >= to_date('" + year + "-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') and the_date < to_date('" + nextYear + "-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') and net in ('us', ' ', 'US') and mag >=" + mag;
-            } else {
-                def[8] = "the_date >= to_date('" + year + "-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') and the_date < to_date('" + nextYear + "-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') and mag >= 2 and net in ('us', ' ', 'US')";
-            }
+        // Check validity of dates:
+        if (fromDate !== "") {
+            var fromDateParts = fromDate.split("/");
+            fromMonth = parseInt(fromDateParts[0]);
+            var fromDay = parseInt(fromDateParts[1]);
+            fromYear = parseInt(fromDateParts[2]);
+            fromDateIsValid = validateDate( fromDay, fromMonth, fromYear );
         } else {
-            if (mag !== "all") {
-                def[8] = " mag >=" + mag;
-            } else {
-                def[8] = "";
+            fromMonth = "";
+            fromYear = "";
+        }
+        if (toDate !== "") {
+            var toDateParts = toDate.split("/");
+            toMonth = parseInt(toDateParts[0]);
+            var toDay = parseInt(toDateParts[1]);
+            toYear = parseInt(toDateParts[2]);
+            toDateIsValid = validateDate( toDay, toMonth, toYear );
+        } else {
+            toMonth = "";
+            toYear = "";
+        }
+        if (!fromDateIsValid || !toDateIsValid) {
+            alert("An invalid date was entered.");
+            return;
+        }
+        var d1 = new Date();
+        var d2 = new Date(fromDate);
+        if (d2 > d1) {
+            alert("From Date cannot be in the future.");
+            return;
+        }
+        var d3 = new Date(toDate);
+        if (d2 > d3) {
+            alert("From Date cannot be later than To Date");
+            return;
+        }
+
+        // Create time where clause:
+        if (fromDate && toDate) {
+            timeWhere = "trunc(local_time) >= to_date('" + fromDate + "','mm/dd/yyyy') and trunc(local_time) <= to_date('" + toDate + "','mm/dd/yyyy')";
+        } else if (fromDate && !toDate) {
+            timeWhere = "trunc(local_time) >= to_date('" + fromDate + "','mm/dd/yyyy')";
+        } else if (!fromDate && toDate) {
+            timeWhere = "trunc(local_time) <= to_date('" + toDate + "','mm/dd/yyyy')";
+        }
+
+        // Create magnitude where clause:
+        if (mag !== "all") {
+            switch (mag) {
+                case "2":
+                    magWhere = "magnitude >= 2 and magnitude < 3";
+                    break;
+                case "3":
+                    magWhere = "magnitude >= 3 and magnitude < 4";
+                    break;
+                case "4":
+                    magWhere = "magnitude >= 4";
+                    break;
             }
         }
-        earthquakesLayer.setLayerDefinitions(def);
+
+        // Create final where clause:
+        if (timeWhere !== "") {
+			theWhere += timeWhere + " and ";
+		}
+		if (magWhere !== "") {
+			theWhere += magWhere + " and ";
+		}
+		// Strip off final "and":
+		if (theWhere.substr(theWhere.length - 5) === " and ") {
+			theWhere = theWhere.slice(0,theWhere.length - 5);
+		}
+
+        quakesLayer.findSublayerById(0).definitionExpression = theWhere;
+        idDef[0] = theWhere;
     }
 
 
-    function filterQuakesRecent() {
-        var def = [];
-        def[8] = "state = 'KS' and mag >= 2 and net in ('us', ' ', 'US') and the_date = (select max(the_date) from earthquakes where state = 'KS' and mag >= 2 and net in ('us', ' ', 'US'))";
-        earthquakesLayer.setLayerDefinitions(def);
+    clearQuakeFilter = function() {
+        graphicsLayer.removeAll();
+        $("#from-date, #to-date, #mag").val("");
+        quakesLayer.findSublayerById(0).definitionExpression = "";
+        idDef[0] = "";
     }
 
 
-    function filterQuakesDays(days) {
-        var def = [];
-
-        if (days !== "all") {
-            def[8] = "sysdate - the_date <= " + days + " and mag >= 2 and net in ('us', ' ', 'US')";
-        } else {
-            def[8] = "";
-        }
-        earthquakesLayer.setLayerDefinitions(def);
-    }
+    function validateDate( intDay, intMonth, intYear ) {
+	    return intMonth >= 1 && intMonth <= 12 && intDay > 0 && intDay <= daysInMonth( intMonth, intYear );
+	}
 
 
-    function clearQuakeFilter() {
-        var def = [];
-        def = "";
-        earthquakesLayer.setLayerDefinitions(def);
-        days.options[0].selected="selected";
-        mag.options[0].selected="selected";
-        year.options[0].selected="selected";
-    }
+	function daysInMonth( intMonth, intYear ) {
+	    switch ( intMonth )
+	    {
+	        case 2:
+	            return (intYear % 4 == 0 && intYear % 100) || intYear % 400 == 0 ? 29 : 28;
+	        case 4:
+	        case 6:
+	        case 9:
+	        case 11:
+	            return 30;
+	        default :
+	            return 31
+	    }
+	}
 } );    // End require.
