@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.8/esri/css/main.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://js.arcgis.com/4.8/"></script>
+    <script src="//wurfl.io/wurfl.js"></script>
+    <script src="main.js"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ctrl,
+        #legend-content {
+            font: normal normal normal 16px arial;
+            margin-top: 8px;
+            text-align: left;
+        }
+
+        .esriScalebar {
+            left: 23px;
+            position: absolute;
+            top: 460px;
+        }
+
+        #filter {
+            margin-left: 65px;
+        }
+
+        #map-div {
+            border: solid;
+            height: 70%;
+            margin: 5px;
+            width: 98%;
+        }
+
+        .txtinput {
+            font: normal normal normal 16px arial;
+        }
+
+        #filter {
+            float: left;
+        }
+
+        #legend-content,
+        #logo {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map-div"></div>
+    <div id="filter">
+        <div class="ctrl">
+            Date Range: &nbsp;&nbsp;&nbsp;
+            From <input class="txtinput" type="text" size="14" id="from-date" placeholder="mm/dd/yyyy">&nbsp;&nbsp;
+            To <input class="txtinput" type="text" size="14" id="to-date" placeholder="mm/dd/yyyy">
+        </div>
+
+        <div class="ctrl">
+            Magnitude:
+            <select class="txtinput" name="mag" id="mag">
+                <option value="all" selected>All</option>
+                <option value="2">2.0 to 2.9</option>
+                <option value="3">3.0 to 3.9</option>
+                <option value="4">4.0 and greater</option>
+            </select>
+        </div>
+
+        <div class="ctrl">
+            <input class="txtinput" type="button" onclick="filterQuakes();" value="Apply Filter" />&nbsp;&nbsp;&nbsp;
+            <input class="txtinput" type="button" onclick="clearQuakeFilter();" value="Clear Filter" />
+        </div>
+    </div>
+
+    <!-- <div id="logo"><img src="kgs_logo.png"></div> -->
+
+    <div id="legend-content">
+        KGS Earthquakes<br>
+        Magnitude<br>
+        <img src="legend.png">
+    </div>
+</body>
+</html>
