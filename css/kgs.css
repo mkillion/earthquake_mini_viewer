@@ -24,6 +24,17 @@ th, td {
 	top: -3px;
 }
 
+.ctrl {
+	color: #000 !important;
+	font: normal normal normal 16px arial;
+	margin-left: 8px;
+	text-align: right;
+}
+
+#ui-datepicker-div {
+	width: 310px;
+}
+
 #legend-content {
 	margin-left: 12px;
 }
