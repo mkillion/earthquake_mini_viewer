@@ -236,6 +236,18 @@ function(
 
 		// Remove zoom-to action that gets added by default:
 		view.popup.actions.splice(0, 1);
+
+		// Default initial load to display quakes in the last 7 days:
+        var today = new Date();
+        var daysAgo = new Date();
+        var startDate = new Date( daysAgo.setDate(today.getDate() - 7) );
+        var year = startDate.getFullYear();
+        var month = addZero( startDate.getMonth() + 1 );
+        var day = addZero( startDate.getDate() );
+        var dateTxt = month + "/" + day + "/" + year;
+
+        $("#from-date").val(dateTxt);
+        filterQuakes();
     } );
 
 	var searchWidget = new Search({
@@ -335,6 +347,11 @@ function(
 			symbol: sym
 		} );
 		graphicsLayer.add(hilite);
+    }
+
+
+	function addZero(x) {
+        return (x < 10 ? '0' : '') + x;
     }
 
 
