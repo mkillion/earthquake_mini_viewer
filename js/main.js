@@ -370,7 +370,7 @@ function(
 		content += '<tr><td>To Date:</td><td><input class="txtinput" type="text" size="14" id="to-date" placeholder="mm/dd/yyyy"></td></tr>';
 		content += '<tr><td>Magnitude:</td>';
 		content += '<td><select class="txtinput" name="mag" id="mag">';
-		content += '<option value="all" selected>All</option><option value="2">2.0 to 2.9</option><option value="3">3.0 to 3.9</option><option value="4">4.0 and greater</option>';
+		content += '<option value="all" selected>2.0 +</option><option value="2">2.0 to 2.9</option><option value="3">3.0 to 3.9</option><option value="4">4.0 and greater</option>';
 		content += '</select></td></tr>';
 		content += '<tr><td colspan="2"><input class="txtinput" type="button" onclick="filterQuakes();" value="Apply Filter" />&nbsp;&nbsp;<input class="txtinput" type="button" onclick="clearQuakeFilter();" value="Clear Filter" /></td></tr></table>';
 		content += "</div>";
