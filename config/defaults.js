@@ -38,9 +38,6 @@ define({
     // MK additions:
     "enableZoomToPanel": true,
     "enableToolsPanel": true,
-    "fieldsServiceURL": "http://services.kgs.ku.edu/arcgis2/rest/services/oilgas/oilgas_fields/MapServer",
-    "wellsServiceURL": "http://services.kgs.ku.edu/arcgis2/rest/services/oilgas/oilgas_general/MapServer",
-    "plssServiceURL": "http://services.kgs.ku.edu/arcgis2/rest/services/plss/plss/MapServer",
     // End MK additions.
 
     //Enter the url to your organizations bing maps key if you want to use bing basemaps
