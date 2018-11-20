@@ -123,7 +123,7 @@ function(
     var identifyTask, identifyParams;
 
     var basemapLayer = new TileLayer( {url:"//services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer", id:"Base Map"} );
-    var quakesURL = "http://services.kgs.ku.edu/arcgis8/rest/services/tremor/quakes_public/MapServer";
+    var quakesURL = "http://services.kgs.ku.edu/arcgis2/rest/services/tremor/quakes_public/MapServer";
 	var graphicsLayer = new GraphicsLayer();
 
 	var quakesRenderer = new ClassBreaksRenderer( {
