@@ -366,8 +366,8 @@ function(
         content += '<div class="panel-padding">';
 		content += "<div class='ctrl'>";
 		content += "<table>";
-		content += '<tr><td>From Date:</td><td><input class="txtinput" type="text" size="14" id="from-date" placeholder="mm/dd/yyyy"></td></tr>';
-		content += '<tr><td>To Date:</td><td><input class="txtinput" type="text" size="14" id="to-date" placeholder="mm/dd/yyyy"></td></tr>';
+		content += '<tr><td>From Date<span class="note"> (local)</span>:</td><td><input class="txtinput" type="text" size="14" id="from-date" placeholder="mm/dd/yyyy"></td></tr>';
+		content += '<tr><td>To Date<span class="note"> (local)</span>:</td><td><input class="txtinput" type="text" size="14" id="to-date" placeholder="mm/dd/yyyy"></td></tr>';
 		content += '<tr><td>Magnitude:</td>';
 		content += '<td><select class="txtinput" name="mag" id="mag">';
 		content += '<option value="all" selected>2.0 +</option><option value="2">2.0 to 2.9</option><option value="3">3.0 to 3.9</option><option value="4">4.0 and greater</option>';

@@ -24,6 +24,11 @@ th, td {
 	top: -3px;
 }
 
+.note {
+	color: ##6E6E6E;
+	font: normal normal normal 12px arial;
+}
+
 .ctrl {
 	color: #000 !important;
 	font: normal normal normal 16px arial;
