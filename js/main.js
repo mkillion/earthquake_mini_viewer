@@ -286,6 +286,7 @@ function(
 		$("#filter-msg").html("");
         quakesLayer.findSublayerById(0).definitionExpression = "";
         idDef[0] = "";
+		view.popup.visible = false;
     }
 
 
@@ -641,18 +642,19 @@ function(
 				highlightFeature(feature);
 
 				// Set from-date and magnitude and filter, displaying only this event:
-				var localDate = feature.attributes.LOCAL_TIME.substring(0, 10);
-				$("#from-date, #to-date").val(localDate);
-
-				var m = feature.attributes.MAGNITUDE;
-				if (m >= 4) {
-					var mag = 4;
-				} else if (m >= 3 && m < 4) {
-					var mag = 3;
-				} else if (m >= 2 && m < 3) {
-					var mag = 2;
-				}
-				$("#mag").val(mag);
+				// var localDate = feature.attributes.LOCAL_TIME.substring(0, 10);
+				// $("#from-date, #to-date").val(localDate);
+				//
+				// var m = feature.attributes.MAGNITUDE;
+				// if (m >= 4) {
+				// 	var mag = 4;
+				// } else if (m >= 3 && m < 4) {
+				// 	var mag = 3;
+				// } else if (m >= 2 && m < 3) {
+				// 	var mag = 2;
+				// }
+				// $("#mag").val(mag);
+				$("#from-date, #to-date, #mag").val("");
 
 				$("#filter-msg").html("Showing only quake ID " + feature.attributes.QUAKE_ID);
 
