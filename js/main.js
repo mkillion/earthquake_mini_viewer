@@ -15,7 +15,6 @@ require([
     "esri/layers/MapImageLayer",
     "esri/widgets/Search",
     "esri/widgets/Home",
-    "esri/widgets/Locate",
     "esri/PopupTemplate",
     "esri/widgets/Popup",
     "esri/tasks/IdentifyTask",
@@ -59,7 +58,6 @@ function(
     MapImageLayer,
     Search,
     Home,
-    Locate,
     PopupTemplate,
     Popup,
     IdentifyTask,
@@ -120,11 +118,15 @@ function(
     // End framework.
 
     // Create map and map widgets:
-    var identifyTask, identifyParams;
-
     var basemapLayer = new TileLayer( {url:"//services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer", id:"Base Map"} );
     var quakesURL = "http://services.kgs.ku.edu/arcgis2/rest/services/tremor/quakes_public/MapServer";
 	var graphicsLayer = new GraphicsLayer();
+
+	var identifyTask, identifyParams;
+	var findTask = new FindTask(quakesURL);
+    var findParams = new FindParameters();
+	findParams.returnGeometry = true;
+	findParams.contains = false;
 
 	var quakesRenderer = new ClassBreaksRenderer( {
 		field: "magnitude"
@@ -246,6 +248,9 @@ function(
         var day = addZero( startDate.getDate() );
         var dateTxt = month + "/" + day + "/" + year;
 
+		urlParams = location.search.substr(1);
+	    urlZoom(urlParams);
+
         $("#from-date").val(dateTxt);
         filterQuakes();
     } );
@@ -263,14 +268,6 @@ function(
         position: "bottom-left"
       } );
 
-	var locateBtn = new Locate( {
-        view: view
-	}, "LocateButton" );
-	view.ui.add(locateBtn, {
-    	position: "top-left",
-        index: 2
-     } );
-
 	//  var legend = new Legend( {
  	//  	view: view,
  	//   	layerInfos: [
@@ -286,6 +283,7 @@ function(
 	clearQuakeFilter = function() {
         graphicsLayer.removeAll();
         $("#from-date, #to-date, #mag").val("");
+		$("#filter-msg").html("");
         quakesLayer.findSublayerById(0).definitionExpression = "";
         idDef[0] = "";
     }
@@ -372,6 +370,7 @@ function(
 		content += '<td><select class="txtinput" name="mag" id="mag">';
 		content += '<option value="all" selected>2.0 +</option><option value="2">2.0 to 2.9</option><option value="3">3.0 to 3.9</option><option value="4">4.0 and greater</option>';
 		content += '</select></td></tr>';
+		content += "<tr><td colspan='2'><span id='filter-msg'></span></td></tr>";
 		content += '<tr><td colspan="2"><input class="txtinput" type="button" onclick="filterQuakes();" value="Apply Filter" />&nbsp;&nbsp;<input class="txtinput" type="button" onclick="clearQuakeFilter();" value="Clear Filter" /></td></tr></table>';
 		content += "</div>";
 		content += '</div>';
@@ -547,6 +546,7 @@ function(
                 } );
                 feature.popupTemplate = quakeTemplate;
             }
+
 			return feature;
 		} );
 	}
@@ -602,6 +602,65 @@ function(
         content += "</table>";
 
         return content;
+    }
+
+
+	function urlZoom(urlParams) {
+        var items = urlParams.split("&");
+        if (items.length > 1) {
+            var extType = items[0].substring(5);
+            var extValue = items[1].substring(3);
+
+            switch (extType) {
+				case "quake":
+                    findParams.layerIds = [0];
+                    findParams.searchFields = ["QUAKE_ID"];
+                    break;
+            }
+
+            findParams.searchText = extValue;
+            findTask.execute(findParams)
+            .then(function(response) {
+				var feature = response.results[0].feature;
+
+				// Zoom to feature:
+				var pt84 = new Point(feature.geometry.x, feature.geometry.y, new SpatialReference( { wkid: 4326} ) );
+	            var wmPt = webMercatorUtils.geographicToWebMercator(pt84);
+				view.center = wmPt;
+		        view.scale = 60000;
+
+				// Open popup:
+                var quakeTemplate = new PopupTemplate( {
+                    title: "KGS Network Earthquake",
+                    content: quakeContent(feature)
+                } );
+                feature.popupTemplate = quakeTemplate;
+
+				arrFeature =[feature];
+				openPopup(arrFeature);
+				highlightFeature(feature);
+
+				// Set from-date and magnitude and filter, displaying only this event:
+				var localDate = feature.attributes.LOCAL_TIME.substring(0, 10);
+				$("#from-date, #to-date").val(localDate);
+
+				var m = feature.attributes.MAGNITUDE;
+				if (m >= 4) {
+					var mag = 4;
+				} else if (m >= 3 && m < 4) {
+					var mag = 3;
+				} else if (m >= 2 && m < 3) {
+					var mag = 2;
+				}
+				$("#mag").val(mag);
+
+				$("#filter-msg").html("Showing only quake ID " + feature.attributes.QUAKE_ID);
+
+				var whereClause = "QUAKE_ID = " + feature.attributes.QUAKE_ID;
+				quakesLayer.findSublayerById(0).definitionExpression = whereClause;
+		        idDef[0] = whereClause;
+            } );
+        }
     }
 
 } );
