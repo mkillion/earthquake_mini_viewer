@@ -639,7 +639,7 @@ function(
 
 				arrFeature =[feature];
 				openPopup(arrFeature);
-				highlightFeature(feature);
+				// highlightFeature(feature);
 
 				// Set from-date and magnitude and filter, displaying only this event:
 				// var localDate = feature.attributes.LOCAL_TIME.substring(0, 10);
