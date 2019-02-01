@@ -296,7 +296,7 @@ function(
 		view.popup.dockEnabled = true;
 		view.popup.dockOptions = {
 			buttonEnabled: false,
-			position: "bottom-right"
+			position: "auto"
 		};
 		view.popup.visible = true;
     }
